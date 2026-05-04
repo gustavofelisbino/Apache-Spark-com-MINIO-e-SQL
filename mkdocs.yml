@@ -1,0 +1,41 @@
+site_name: "Trabalho 2 — Apache Spark com MinIO e SQL Server"
+site_description: "Pipeline de dados: SQL Server → landing-zone (CSV) → bronze (Delta Lake)"
+site_author: "Gustavo Felisbino"
+
+theme:
+  name: material
+  language: pt
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Modo escuro
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Modo claro
+  features:
+    - navigation.tabs
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - tables
+
+nav:
+  - Início: index.md
+  - Arquitetura: arquitetura.md
+  - Notebooks:
+      - "00 - Setup SQL Server": notebooks/00_setup.md
+      - "01 - Extração": notebooks/01_extracao.md
+      - "02 - Bronze Delta": notebooks/02_bronze.md
+      - "03 - DML Delta": notebooks/03_dml.md

@@ -1,0 +1,16 @@
+id_modelo,nome,id_marca,tipo
+1,Corolla,1,Sedan
+2,Hilux,1,Pickup
+3,Golf,2,Hatch
+4,T-Cross,2,SUV
+5,Uno,3,Hatch
+6,Argo,3,Hatch
+7,Onix,4,Hatch
+8,Tracker,4,SUV
+9,Civic,5,Sedan
+10,HR-V,5,SUV
+11,HB20,6,Hatch
+12,Creta,6,SUV
+13,Ka,7,Hatch
+14,Ranger,7,Pickup
+15,Sandero,8,Hatch

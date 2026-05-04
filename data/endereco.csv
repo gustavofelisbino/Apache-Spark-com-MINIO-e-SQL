@@ -1,0 +1,11 @@
+id_endereco,logradouro,numero,bairro,cep,id_municipio
+1,Av. Paulista,1000,Bela Vista,01310-100,1
+2,Rua das Flores,250,Copacabana,22020-001,2
+3,Av. Afonso Pena,500,Centro,30130-001,3
+4,Rua XV de Novembro,120,Centro,80020-310,4
+5,Av. Borges de Medeiros,800,Praia de Belas,90110-150,5
+6,Av. Sete de Setembro,200,Vitória,40060-001,6
+7,Av. Beira Mar,1500,Meireles,60165-121,7
+8,Av. Eduardo Ribeiro,900,Centro,69010-001,8
+9,SGAS 910,10,Asa Sul,70390-100,9
+10,Av. Conde da Boa Vista,400,Boa Vista,50060-002,10

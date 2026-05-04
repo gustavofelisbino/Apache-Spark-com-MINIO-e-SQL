@@ -1,0 +1,9 @@
+id_sinistro,data_ocorrencia,descricao,valor_prejuizo,status,id_apolice
+1,2024-03-10,Colisão frontal em avenida,15000.00,Pago,1
+2,2024-04-22,Roubo do veículo,45000.00,Em análise,2
+3,2024-02-05,Alagamento por chuva,8000.00,Pago,3
+4,2024-06-15,Colisão traseira,5500.00,Recusado,4
+5,2024-05-30,Incêndio no veículo,32000.00,Em análise,5
+6,2024-07-08,Quebra de vidro,1200.00,Pago,6
+7,2024-03-25,Colisão em estacionamento,3800.00,Pago,8
+8,2024-08-11,Roubo de acessórios,2500.00,Em análise,9

@@ -1,0 +1,19 @@
+[project]
+name = "trabalho2-spark-minio-sqlserver-delta"
+version = "0.1.0"
+description = "Pipeline de dados: SQL Server → MinIO (landing-zone CSV) → Bronze (Delta Lake)"
+requires-python = ">=3.11"
+
+dependencies = [
+    "boto3>=1.34.0",
+    "python-dotenv>=1.0.0",
+    "pyodbc>=5.0.0",
+    "pyspark==3.5.3",
+    "delta-spark==3.2.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "jupyter>=1.0.0",
+    "ipykernel>=6.29.0",
+]
