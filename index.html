@@ -9,7 +9,7 @@
         <meta name="description" content="Pipeline de dados: SQL Server → landing-zone (CSV) → bronze (Delta Lake)">
       
       
-        <meta name="author" content="Gustavo Felisbino">
+        <meta name="author" content="Gustavo Felisbino e Lucas Oliverio">
       
       
       
@@ -51,6 +51,8 @@
       
     
     
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
     <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#trabalho-2-apache-spark-com-minio-e-sql-server" class="md-skip">
+        <a href="#apache-spark-com-minio-e-sql-server" class="md-skip">
           Ir para o conteúdo
         </a>
       
@@ -172,6 +174,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -363,10 +367,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fluxo" class="md-nav__link">
+  <a href="#sobre-o-trabalho" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fluxo
+        Sobre o trabalho
       
     </span>
   </a>
@@ -374,10 +378,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#banco-de-dados" class="md-nav__link">
+  <a href="#stack-utilizada" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Banco de dados
+        Stack utilizada
       
     </span>
   </a>
@@ -385,10 +389,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#observacao" class="md-nav__link">
+  <a href="#pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Observação
+        Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#banco-de-dados-seguradora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Banco de dados — seguradora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notebooks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referências
       
     </span>
   </a>
@@ -626,10 +663,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#fluxo" class="md-nav__link">
+  <a href="#sobre-o-trabalho" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fluxo
+        Sobre o trabalho
       
     </span>
   </a>
@@ -637,10 +674,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#banco-de-dados" class="md-nav__link">
+  <a href="#stack-utilizada" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Banco de dados
+        Stack utilizada
       
     </span>
   </a>
@@ -648,10 +685,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#observacao" class="md-nav__link">
+  <a href="#pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Observação
+        Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#banco-de-dados-seguradora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Banco de dados — seguradora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notebooks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referências
       
     </span>
   </a>
@@ -675,77 +745,205 @@
 
 
 
-<h1 id="trabalho-2-apache-spark-com-minio-e-sql-server">Trabalho 2 — Apache Spark com MinIO e SQL Server</h1>
-<p>Pipeline de dados com extração do SQL Server, armazenamento no MinIO e conversão para Delta Lake.</p>
-<h2 id="fluxo">Fluxo</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SQL Server (seguradora)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>        │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        │  pyodbc (boto3)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        ▼
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>MinIO: landing-zone  ← CSVs por tabela
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        │  Apache Spark
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        ▼
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>MinIO: bronze        ← Delta Lake (ACID, Time Travel, DML)
-</code></pre></div>
-<h2 id="banco-de-dados">Banco de dados</h2>
-<p>O banco <code>seguradora</code> contém 11 tabelas de uma seguradora de automóveis:</p>
+<h1 class="hero-title" id="apache-spark-com-minio-e-sql-server">Apache Spark com MinIO e SQL Server<a class="headerlink" href="#apache-spark-com-minio-e-sql-server" title="Permanent link">&para;</a></h1>
+<h2 class="reveal" id="sobre-o-trabalho">Sobre o trabalho<a class="headerlink" href="#sobre-o-trabalho" title="Permanent link">&para;</a></h2>
+<p>Este é o <strong>Trabalho 2</strong> da disciplina de Arquitetura de Dados. O objetivo é construir um pipeline completo seguindo a <strong>arquitetura Medallion</strong>, utilizando <strong>Apache Spark (PySpark)</strong> para extração e transformação, <strong>SQL Server</strong> como banco fonte, <strong>MinIO</strong> como object storage compatível com S3 e <strong>Delta Lake</strong> como formato de tabela aberta com suporte a transações ACID.</p>
+<p>Toda a infraestrutura sobe via Docker Compose — não é necessário instalar Java, Spark ou Python localmente.</p>
+<div class="admonition info">
+<p class="admonition-title">Escopo</p>
+<p>Este trabalho <strong>não</strong> implementa Apache Iceberg. A conversão para Iceberg é requisito exclusivo do Trabalho 1.</p>
+</div>
+<hr />
+<h2 class="reveal" id="stack-utilizada">Stack utilizada<a class="headerlink" href="#stack-utilizada" title="Permanent link">&para;</a></h2>
+<div class="grid cards reveal">
+<ul>
+<li>
+<p><span class="twemoji lg middle accent-sqlserver"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg></span> &nbsp; <strong>SQL Server 2022</strong></p>
+<hr />
+<p>Banco de dados fonte com 11 tabelas relacionais do domínio <code>seguradora</code></p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-minio"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 20q-2.28 0-3.89-1.57Q1 16.85 1 14.58q0-1.95 1.17-3.48 1.18-1.53 3.08-1.95.63-2.3 2.5-3.72Q9.63 4 12 4q2.93 0 4.96 2.04Q19 8.07 19 11q1.73.2 2.86 1.5 1.14 1.28 1.14 3 0 1.88-1.31 3.19T18.5 20m-12-2h12q1.05 0 1.77-.73.73-.72.73-1.77t-.73-1.77Q19.55 13 18.5 13H17v-2q0-2.07-1.46-3.54Q14.08 6 12 6 9.93 6 8.46 7.46 7 8.93 7 11h-.5q-1.45 0-2.47 1.03Q3 13.05 3 14.5T4.03 17q1.02 1 2.47 1m5.5-6"/></svg></span> &nbsp; <strong>MinIO</strong></p>
+<hr />
+<p>Object storage compatível com S3, hospedando os buckets <code>landing-zone</code> e <code>bronze</code></p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-spark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32-2.59 2.08-3.61 5.75-2.39 8.9.04.1.08.2.08.33 0 .22-.15.42-.35.5-.23.1-.47.04-.66-.12a.6.6 0 0 1-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5.14.6.41 1.2.71 1.73 1.08 1.73 2.95 2.97 4.96 3.22 2.14.27 4.43-.12 6.07-1.6 1.83-1.66 2.47-4.32 1.53-6.6l-.13-.26c-.21-.46-.77-1.26-.77-1.26m-3.16 6.3c-.28.24-.74.5-1.1.6-1.12.4-2.24-.16-2.9-.82 1.19-.28 1.9-1.16 2.11-2.05.17-.8-.15-1.46-.28-2.23-.12-.74-.1-1.37.17-2.06.19.38.39.76.63 1.06.77 1 1.98 1.44 2.24 2.8.04.14.06.28.06.43.03.82-.33 1.72-.93 2.27"/></svg></span> &nbsp; <strong>Apache Spark 3.5</strong></p>
+<hr />
+<p>Engine de processamento distribuído, lê CSV e grava Delta no MinIO via S3A</p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-delta"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0 3 7l1.63 1.27L12 14l7.36-5.73L21 7zm7.37 10.73L12 16.47l-7.38-5.73L3 12l9 7 9-7zm0 5L12 21.47l-7.38-5.73L3 17l9 7 9-7z"/></svg></span> &nbsp; <strong>Delta Lake 3.2</strong></p>
+<hr />
+<p>Open table format com ACID, Time Travel e DML nativo (INSERT/UPDATE/DELETE)</p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-python"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.14 7.5A2.86 2.86 0 0 1 22 10.36v3.78A2.86 2.86 0 0 1 19.14 17H12c0 .39.32.96.71.96H17v1.68a2.86 2.86 0 0 1-2.86 2.86H9.86A2.86 2.86 0 0 1 7 19.64v-3.75a2.85 2.85 0 0 1 2.86-2.85h5.25a2.85 2.85 0 0 0 2.85-2.86V7.5zm-4.28 11.79c-.4 0-.72.3-.72.89s.32.71.72.71a.71.71 0 0 0 .71-.71c0-.59-.32-.89-.71-.89m-10-1.79A2.86 2.86 0 0 1 2 14.64v-3.78A2.86 2.86 0 0 1 4.86 8H12c0-.39-.32-.96-.71-.96H7V5.36A2.86 2.86 0 0 1 9.86 2.5h4.28A2.86 2.86 0 0 1 17 5.36v3.75a2.85 2.85 0 0 1-2.86 2.85H8.89a2.85 2.85 0 0 0-2.85 2.86v2.68zM9.14 5.71c.4 0 .72-.3.72-.89s-.32-.71-.72-.71c-.39 0-.71.12-.71.71s.32.89.71.89"/></svg></span> &nbsp; <strong>Python + pyodbc + boto3</strong></p>
+<hr />
+<p>Extração das tabelas do SQL Server e upload em CSV para o MinIO</p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-docker"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.81 10.25c-.06-.04-.56-.43-1.64-.43-.28 0-.56.03-.84.08-.21-1.4-1.38-2.11-1.43-2.14l-.29-.17-.18.27c-.24.36-.43.77-.51 1.19-.2.8-.08 1.56.33 2.21-.49.28-1.29.35-1.46.35H2.62c-.34 0-.62.28-.62.63 0 1.15.18 2.3.58 3.38.45 1.19 1.13 2.07 2 2.61.98.6 2.59.94 4.42.94.79 0 1.61-.07 2.42-.22 1.12-.2 2.2-.59 3.19-1.16A8.3 8.3 0 0 0 16.78 16c1.05-1.17 1.67-2.5 2.12-3.65h.19c1.14 0 1.85-.46 2.24-.85.26-.24.45-.53.59-.87l.08-.24zm-17.96.99h1.76c.08 0 .16-.07.16-.16V9.5c0-.08-.07-.16-.16-.16H3.85c-.09 0-.16.07-.16.16v1.58c.01.09.07.16.16.16m2.43 0h1.76c.08 0 .16-.07.16-.16V9.5c0-.08-.07-.16-.16-.16H6.28c-.09 0-.16.07-.16.16v1.58c.01.09.07.16.16.16m2.47 0h1.75c.1 0 .17-.07.17-.16V9.5c0-.08-.06-.16-.17-.16H8.75c-.08 0-.15.07-.15.16v1.58c0 .09.06.16.15.16m2.44 0h1.77c.08 0 .15-.07.15-.16V9.5c0-.08-.06-.16-.15-.16h-1.77c-.08 0-.15.07-.15.16v1.58c0 .09.07.16.15.16M6.28 9h1.76c.08 0 .16-.09.16-.18V7.25c0-.09-.07-.16-.16-.16H6.28c-.09 0-.16.06-.16.16v1.57c.01.09.07.18.16.18m2.47 0h1.75c.1 0 .17-.09.17-.18V7.25c0-.09-.06-.16-.17-.16H8.75c-.08 0-.15.06-.15.16v1.57c0 .09.06.18.15.18m2.44 0h1.77c.08 0 .15-.09.15-.18V7.25c0-.09-.07-.16-.15-.16h-1.77c-.08 0-.15.06-.15.16v1.57c0 .09.07.18.15.18m0-2.28h1.77c.08 0 .15-.07.15-.16V5c0-.1-.07-.17-.15-.17h-1.77c-.08 0-.15.06-.15.17v1.56c0 .08.07.16.15.16m2.46 4.52h1.76c.09 0 .16-.07.16-.16V9.5c0-.08-.07-.16-.16-.16h-1.76c-.08 0-.15.07-.15.16v1.58c0 .09.07.16.15.16"/></svg></span> &nbsp; <strong>Docker Compose</strong></p>
+<hr />
+<p>Orquestração dos containers SQL Server, MinIO e Jupyter Lab</p>
+</li>
+</ul>
+</div>
+<hr />
+<h2 class="reveal" id="pipeline">Pipeline<a class="headerlink" href="#pipeline" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    A[(SQL Server&lt;br/&gt;seguradora)] --&gt;|pyodbc + boto3| B[MinIO&lt;br/&gt;landing-zone&lt;br/&gt;CSV]
+    B --&gt;|Apache Spark 3.5| C[MinIO&lt;br/&gt;bronze&lt;br/&gt;Delta Lake]
+    C -.-&gt;|ACID · Time Travel| D[INSERT · UPDATE · DELETE]
+
+    style A fill:#cc2927,stroke:#7a1717,color:#fff
+    style B fill:#c72e29,stroke:#7a1c19,color:#fff
+    style C fill:#00add4,stroke:#005f74,color:#fff
+    style D fill:#5e6ee4,stroke:#3a44a0,color:#fff</code></pre>
 <table>
 <thead>
 <tr>
-<th>Tabela</th>
+<th>Camada</th>
+<th>Bucket</th>
+<th>Formato</th>
 <th>Descrição</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>estado</td>
-<td>Estados brasileiros</td>
+<td><strong>Landing Zone</strong></td>
+<td><code>landing-zone</code></td>
+<td>CSV</td>
+<td>Dados brutos extraídos do SQL Server</td>
 </tr>
 <tr>
-<td>regiao</td>
+<td><strong>Bronze</strong></td>
+<td><code>bronze</code></td>
+<td>Delta Lake</td>
+<td>Dados em formato transacional com DML nativo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 class="reveal" id="banco-de-dados-seguradora">Banco de dados — seguradora<a class="headerlink" href="#banco-de-dados-seguradora" title="Permanent link">&para;</a></h2>
+<p>O banco <code>seguradora</code> modela um sistema de <strong>seguro de automóveis</strong> com 11 tabelas relacionais.</p>
+<pre class="mermaid"><code>erDiagram
+    REGIAO ||--o{ ESTADO : tem
+    ESTADO ||--o{ MUNICIPIO : possui
+    MUNICIPIO ||--o{ ENDERECO : localiza
+    ENDERECO ||--o{ CLIENTE : reside
+    CLIENTE ||--o{ TELEFONE : tem
+    CLIENTE ||--o{ APOLICE : possui
+    APOLICE ||--o{ SINISTRO : gera
+    APOLICE }o--|| CARRO : cobre
+    MARCA ||--o{ MODELO : produz
+    MODELO ||--o{ CARRO : define</code></pre>
+<table>
+<thead>
+<tr>
+<th>Tabela</th>
+<th>Registros</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>regiao</code></td>
+<td>5</td>
 <td>Regiões do Brasil</td>
 </tr>
 <tr>
-<td>municipio</td>
+<td><code>estado</code></td>
+<td>15</td>
+<td>Estados brasileiros</td>
+</tr>
+<tr>
+<td><code>municipio</code></td>
+<td>10</td>
 <td>Municípios</td>
 </tr>
 <tr>
-<td>endereco</td>
+<td><code>endereco</code></td>
+<td>10</td>
 <td>Endereços dos clientes</td>
 </tr>
 <tr>
-<td>cliente</td>
+<td><code>cliente</code></td>
+<td>10</td>
 <td>Clientes da seguradora</td>
 </tr>
 <tr>
-<td>telefone</td>
-<td>Telefones dos clientes</td>
+<td><code>telefone</code></td>
+<td>10</td>
+<td>Telefones de contato</td>
 </tr>
 <tr>
-<td>marca</td>
+<td><code>marca</code></td>
+<td>8</td>
 <td>Marcas de veículos</td>
 </tr>
 <tr>
-<td>modelo</td>
+<td><code>modelo</code></td>
+<td>15</td>
 <td>Modelos de veículos</td>
 </tr>
 <tr>
-<td>carro</td>
+<td><code>carro</code></td>
+<td>10</td>
 <td>Veículos segurados</td>
 </tr>
 <tr>
-<td>apolice</td>
+<td><code>apolice</code></td>
+<td>10</td>
 <td>Apólices de seguro</td>
 </tr>
 <tr>
-<td>sinistro</td>
+<td><code>sinistro</code></td>
+<td>8</td>
 <td>Sinistros registrados</td>
 </tr>
 </tbody>
 </table>
-<h2 id="observacao">Observação</h2>
-<p>Este trabalho <strong>não</strong> implementa Apache Iceberg. A conversão para Iceberg é requisito exclusivo do Trabalho 1.</p>
+<hr />
+<h2 class="reveal" id="notebooks">Notebooks<a class="headerlink" href="#notebooks" title="Permanent link">&para;</a></h2>
+<p>A execução do pipeline é feita em quatro notebooks, executados em ordem:</p>
+<div class="grid cards reveal">
+<ul>
+<li>
+<p><span class="twemoji lg middle accent-sqlserver"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4-3.58 4-8 4-8-1.79-8-4m8.08 11H12c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.29a7.4 7.4 0 0 1-.29-2c0-.34.03-.67.08-1M20 12.08V9c0 2.21-3.58 4-8 4s-8-1.79-8-4v3c0 2.21 3.58 4 8 4h.69c1.13-2.37 3.53-4 6.31-4 .34 0 .67.03 1 .08m3.8 8.32c.1 0 .1.1 0 .2l-1 1.7c-.1.1-.2.1-.3.1l-1.2-.4c-.3.2-.5.3-.8.5l-.2 1.3c0 .1-.1.2-.2.2h-2c-.1 0-.2-.1-.3-.2l-.2-1.3c-.3-.1-.6-.3-.8-.5l-1.2.5c-.1 0-.2 0-.3-.1l-1-1.7c-.1-.1 0-.2.1-.3l1.1-.8v-1l-1.1-.8c-.1-.1-.1-.2-.1-.3l1-1.7c.1-.1.2-.1.3-.1l1.2.5c.3-.2.5-.3.8-.5l.2-1.3c0-.1.1-.2.3-.2h2c.1 0 .2.1.2.2l.2 1.3c.3.1.6.3.9.5l1.2-.5c.1 0 .3 0 .3.1l1 1.7c.1.1 0 .2-.1.3l-1.1.8v1zM20.5 19c0-.8-.7-1.5-1.5-1.5s-1.5.7-1.5 1.5.7 1.5 1.5 1.5 1.5-.7 1.5-1.5"/></svg></span> &nbsp; <strong>00 — Setup SQL Server</strong></p>
+<hr />
+<p>Cria o banco <code>seguradora</code>, as 11 tabelas e importa os CSVs da pasta <code>data/</code></p>
+<p><a href="notebooks/00_setup/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Detalhes</a></p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-minio"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23 12-4-4v3h-9v2h9v3M1 18V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3h-2V6H3v12h12v-3h2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2"/></svg></span> &nbsp; <strong>01 — Extração para landing-zone</strong></p>
+<hr />
+<p>Lê todas as tabelas via <code>pyodbc</code> e faz upload para o MinIO como CSV via <code>boto3</code></p>
+<p><a href="notebooks/01_extracao/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Detalhes</a></p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-delta"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0 3 7l1.63 1.27L12 14l7.36-5.73L21 7zm7.37 10.73L12 16.47l-7.38-5.73L3 12l9 7 9-7zm0 5L12 21.47l-7.38-5.73L3 17l9 7 9-7z"/></svg></span> &nbsp; <strong>02 — Bronze Delta</strong></p>
+<hr />
+<p>Lê os CSVs com Spark e converte para Delta Lake no bucket <code>bronze</code></p>
+<p><a href="notebooks/02_bronze/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Detalhes</a></p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-bronze"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 14v3c0 2 3.05 3.72 7 4v-2.89l.13-.11C7.12 17.76 4 16.06 4 14m8-1c-4.42 0-8-1.79-8-4v3c0 2.21 3.58 4 8 4h1.16L17 12.12c-1.6.6-3.29.88-5 .88m0-10C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4m9 8.13c-.15 0-.29.06-.39.17l-1 1 2.05 2 1-1a.54.54 0 0 0 0-.77l-1.24-1.23a.52.52 0 0 0-.38-.17m-2 1.75L13 18.94V21h2.06l6.06-6.07z"/></svg></span> &nbsp; <strong>03 — DML no Delta</strong></p>
+<hr />
+<p>INSERT, UPDATE, DELETE e Time Travel sobre as tabelas Delta</p>
+<p><a href="notebooks/03_dml/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Detalhes</a></p>
+</li>
+</ul>
+</div>
+<hr />
+<h2 class="reveal" id="referencias">Referências<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://spark.apache.org/docs/latest/">Apache Spark — Documentação Oficial</a></li>
+<li><a href="https://docs.delta.io/latest/index.html">Delta Lake — Documentação Oficial</a></li>
+<li><a href="https://min.io/docs/minio/linux/index.html">MinIO — Documentação Oficial</a></li>
+<li><a href="https://github.com/jlsilva01/spark-delta-minio-sqlserver">Repositório modelo — spark-delta-minio-sqlserver (jlsilva01)</a></li>
+<li><a href="https://www.youtube.com/@DataWayBR">Canal DataWay BR</a></li>
+</ul>
 
 
 
@@ -801,7 +999,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.top", "content.code.copy", "search.highlight"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.top", "navigation.instant", "navigation.tracking", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest", "toc.follow"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
     
     
       <script src="assets/javascripts/bundle.79ae519e.min.js"></script>

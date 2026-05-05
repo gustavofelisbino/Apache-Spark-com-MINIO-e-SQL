@@ -9,7 +9,7 @@
         <meta name="description" content="Pipeline de dados: SQL Server → landing-zone (CSV) → bronze (Delta Lake)">
       
       
-        <meta name="author" content="Gustavo Felisbino">
+        <meta name="author" content="Gustavo Felisbino e Lucas Oliverio">
       
       
       
@@ -52,6 +52,8 @@
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -174,6 +176,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -403,10 +407,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#containers-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
         Containers Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estrutura-dos-buckets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estrutura dos buckets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo de dados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracoes-relevantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurações relevantes
       
     </span>
   </a>
@@ -628,10 +676,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#containers-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
         Containers Docker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estrutura-dos-buckets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estrutura dos buckets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fluxo de dados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracoes-relevantes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configurações relevantes
       
     </span>
   </a>
@@ -655,53 +747,188 @@
 
 
 
-<h1 id="arquitetura">Arquitetura</h1>
-<h2 id="visao-geral">Visão geral</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  SQL Server 2022     │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  banco: seguradora   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  11 tabelas          │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└──────────┬───────────┘
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>           │ pyodbc + boto3
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>           ▼
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>┌──────────────────────┐
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  MinIO               │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  bucket: landing-zone│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  formato: CSV        │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└──────────┬───────────┘
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>           │ Apache Spark 3.5
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>           ▼
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>┌──────────────────────┐
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  MinIO               │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  bucket: bronze      │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  formato: Delta Lake │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  INSERT/UPDATE/DELETE│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────────┘
-</code></pre></div>
-<h2 id="containers-docker">Containers Docker</h2>
+<h1 class="hero-title" id="arquitetura">Arquitetura<a class="headerlink" href="#arquitetura" title="Permanent link">&para;</a></h1>
+<h2 class="reveal" id="visao-geral">Visão geral<a class="headerlink" href="#visao-geral" title="Permanent link">&para;</a></h2>
+<p>O pipeline implementa o padrão <strong>Medallion</strong> com duas camadas principais — <em>landing-zone</em> (dados brutos em CSV) e <em>bronze</em> (dados transacionais em Delta Lake). Toda a comunicação entre serviços acontece dentro de uma rede Docker isolada.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Docker["Docker Compose"]
+        subgraph SQL["SQL Server 2022"]
+            DB[(seguradora&lt;br/&gt;11 tabelas)]
+        end
+
+        subgraph Storage["MinIO (S3-compatible)"]
+            LZ[landing-zone&lt;br/&gt;CSV]
+            BR[bronze&lt;br/&gt;Delta Lake]
+        end
+
+        subgraph Compute["Jupyter + PySpark"]
+            NB1[01 — Extração&lt;br/&gt;pyodbc + boto3]
+            NB2[02 — Bronze&lt;br/&gt;Apache Spark]
+            NB3[03 — DML&lt;br/&gt;Delta API]
+        end
+    end
+
+    DB --&gt; NB1
+    NB1 --&gt; LZ
+    LZ --&gt; NB2
+    NB2 --&gt; BR
+    BR --&gt; NB3
+    NB3 --&gt; BR
+
+    style DB fill:#cc2927,stroke:#7a1717,color:#fff
+    style LZ fill:#c72e29,stroke:#7a1c19,color:#fff
+    style BR fill:#00add4,stroke:#005f74,color:#fff</code></pre>
+<hr />
+<h2 class="reveal" id="componentes">Componentes<a class="headerlink" href="#componentes" title="Permanent link">&para;</a></h2>
+<div class="grid cards reveal">
+<ul>
+<li>
+<p><span class="twemoji lg middle accent-sqlserver"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7s3.58 4 8 4 8-1.79 8-4-3.58-4-8-4M4 9v3c0 2.21 3.58 4 8 4s8-1.79 8-4V9c0 2.21-3.58 4-8 4s-8-1.79-8-4m0 5v3c0 2.21 3.58 4 8 4s8-1.79 8-4v-3c0 2.21-3.58 4-8 4s-8-1.79-8-4"/></svg></span> &nbsp; <strong>SQL Server 2022</strong></p>
+<hr />
+<p>Container <code>sqlserver</code>, porta <code>1433</code>. Hospeda o banco <code>seguradora</code> com 11 tabelas e ~120 registros de carga inicial.</p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-minio"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 20q-2.28 0-3.89-1.57Q1 16.85 1 14.58q0-1.95 1.17-3.48 1.18-1.53 3.08-1.95.63-2.3 2.5-3.72Q9.63 4 12 4q2.93 0 4.96 2.04Q19 8.07 19 11q1.73.2 2.86 1.5 1.14 1.28 1.14 3 0 1.88-1.31 3.19T18.5 20m-12-2h12q1.05 0 1.77-.73.73-.72.73-1.77t-.73-1.77Q19.55 13 18.5 13H17v-2q0-2.07-1.46-3.54Q14.08 6 12 6 9.93 6 8.46 7.46 7 8.93 7 11h-.5q-1.45 0-2.47 1.03Q3 13.05 3 14.5T4.03 17q1.02 1 2.47 1m5.5-6"/></svg></span> &nbsp; <strong>MinIO</strong></p>
+<hr />
+<p>Container <code>minio</code>, portas <code>9000</code> (API S3) e <code>9001</code> (console web). Buckets criados automaticamente pelo <code>mc-init</code>.</p>
+</li>
+<li>
+<p><span class="twemoji lg middle accent-jupyter"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 7V5h2V4a2 2 0 0 1 2-2h6v7l2.5-1.5L18 9V2h1c1.05 0 2 .95 2 2v16c0 1.05-.95 2-2 2H7c-1.05 0-2-.95-2-2v-1H3v-2h2v-4H3v-2h2V7zm4 4H5v2h2zm0-4V5H5v2zm0 12v-2H5v2z"/></svg></span> &nbsp; <strong>Jupyter Lab</strong></p>
+<hr />
+<p>Container <code>jupyter</code>, porta <code>8888</code>. Ambiente PySpark com Delta Lake e drivers JDBC pré-instalados.</p>
+</li>
+</ul>
+</div>
+<hr />
+<h2 class="reveal" id="containers-docker">Containers Docker<a class="headerlink" href="#containers-docker" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Container</th>
-<th>Porta</th>
+<th>Imagem</th>
+<th>Porta(s)</th>
 <th>Função</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>sqlserver</td>
-<td>1433</td>
+<td><code>sqlserver</code></td>
+<td><code>mcr.microsoft.com/mssql/server:2022-latest</code></td>
+<td><code>1433</code></td>
 <td>Banco de dados fonte</td>
 </tr>
 <tr>
-<td>minio</td>
-<td>9000 / 9001</td>
-<td>Object storage</td>
+<td><code>minio</code></td>
+<td><code>minio/minio:latest</code></td>
+<td><code>9000</code>, <code>9001</code></td>
+<td>Object storage S3-compatible</td>
 </tr>
 <tr>
-<td>jupyter</td>
-<td>8888</td>
-<td>Ambiente de notebooks</td>
+<td><code>mc-init</code></td>
+<td><code>minio/mc:latest</code></td>
+<td>—</td>
+<td>Cria buckets <code>landing-zone</code> e <code>bronze</code></td>
+</tr>
+<tr>
+<td><code>jupyter</code></td>
+<td><code>quay.io/jupyter/pyspark-notebook</code></td>
+<td><code>8888</code></td>
+<td>Notebooks PySpark</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 class="reveal" id="estrutura-dos-buckets">Estrutura dos buckets<a class="headerlink" href="#estrutura-dos-buckets" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">landing-zone (CSV)</label><label for="__tabbed_1_2">bronze (Delta Lake)</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>landing-zone/
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── apolice/apolice.csv
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── carro/carro.csv
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── cliente/cliente.csv
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── endereco/endereco.csv
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── estado/estado.csv
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── marca/marca.csv
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── modelo/modelo.csv
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── municipio/municipio.csv
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── regiao/regiao.csv
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>├── sinistro/sinistro.csv
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└── telefone/telefone.csv
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bronze/
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── apolice/
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ├── part-00000-*.snappy.parquet
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   └── _delta_log/
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│       ├── 00000000000000000000.json
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│       └── 00000000000000000001.json
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>├── carro/
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>├── cliente/
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>└── ... (uma pasta Delta por tabela)
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<hr />
+<h2 class="reveal" id="fluxo-de-dados">Fluxo de dados<a class="headerlink" href="#fluxo-de-dados" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Notebook as Notebook 01
+    participant SQL as SQL Server
+    participant Boto as boto3 (S3 client)
+    participant MinIO
+
+    Notebook-&gt;&gt;SQL: SELECT * FROM &lt;tabela&gt;
+    SQL--&gt;&gt;Notebook: rows + columns
+    Notebook-&gt;&gt;Notebook: csv.writer (StringIO)
+    Notebook-&gt;&gt;Boto: put_object(landing-zone/&lt;tabela&gt;/&lt;tabela&gt;.csv)
+    Boto-&gt;&gt;MinIO: HTTP PUT
+    MinIO--&gt;&gt;Boto: 200 OK
+    Boto--&gt;&gt;Notebook: ETag</code></pre>
+<hr />
+<h2 class="reveal" id="configuracoes-relevantes">Configurações relevantes<a class="headerlink" href="#configuracoes-relevantes" title="Permanent link">&para;</a></h2>
+<p>A <code>SparkSession</code> do notebook 02 precisa de algumas configs específicas para falar com o MinIO via protocolo S3A e habilitar o catálogo Delta:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">spark</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;csv-to-delta&quot;</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.jars.packages&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>            <span class="s2">&quot;io.delta:delta-spark_2.12:3.2.0,&quot;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>            <span class="s2">&quot;org.apache.hadoop:hadoop-aws:3.3.4,&quot;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="s2">&quot;com.amazonaws:aws-java-sdk-bundle:1.12.262&quot;</span><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.extensions&quot;</span><span class="p">,</span> <span class="s2">&quot;io.delta.sql.DeltaSparkSessionExtension&quot;</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.catalog.spark_catalog&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="s2">&quot;org.apache.spark.sql.delta.catalog.DeltaCatalog&quot;</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.endpoint&quot;</span><span class="p">,</span> <span class="n">MINIO_ENDPOINT</span><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.access.key&quot;</span><span class="p">,</span> <span class="n">MINIO_ACCESS_KEY</span><span class="p">)</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.secret.key&quot;</span><span class="p">,</span> <span class="n">MINIO_SECRET_KEY</span><span class="p">)</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.path.style.access&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.hadoop.fs.s3a.connection.ssl.enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Configuração</th>
+<th>Por que importa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>delta-spark_2.12:3.2.0</code></td>
+<td>Habilita o formato Delta no Spark</td>
+</tr>
+<tr>
+<td><code>hadoop-aws:3.3.4</code></td>
+<td>Driver S3A para acesso ao MinIO</td>
+</tr>
+<tr>
+<td><code>path.style.access=true</code></td>
+<td>MinIO usa path-style, não virtual-host</td>
+</tr>
+<tr>
+<td><code>connection.ssl.enabled=false</code></td>
+<td>Comunicação interna entre containers em HTTP</td>
 </tr>
 </tbody>
 </table>
@@ -760,7 +987,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "content.code.copy", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.top", "navigation.instant", "navigation.tracking", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

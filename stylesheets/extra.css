@@ -1,0 +1,101 @@
+/* ============================================================
+   Hero title — gradiente indigo/violeta usado no topo de cada página
+   ============================================================ */
+.md-typeset h1.hero-title,
+.md-typeset .hero-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #5e6ee4 0%, #8a5cf2 50%, #c64bd4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin: 0.2em 0 0.6em 0;
+  border-bottom: none;
+}
+
+[data-md-color-scheme="slate"] .md-typeset h1.hero-title,
+[data-md-color-scheme="slate"] .md-typeset .hero-title {
+  background: linear-gradient(135deg, #8c98ff 0%, #b48cff 50%, #ec7af0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ============================================================
+   Reveal — fade-in suave no carregamento da página
+   ============================================================ */
+.md-typeset .reveal {
+  animation: reveal-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.md-typeset .reveal:nth-of-type(1) { animation-delay: 0.05s; }
+.md-typeset .reveal:nth-of-type(2) { animation-delay: 0.10s; }
+.md-typeset .reveal:nth-of-type(3) { animation-delay: 0.15s; }
+.md-typeset .reveal:nth-of-type(4) { animation-delay: 0.20s; }
+.md-typeset .reveal:nth-of-type(5) { animation-delay: 0.25s; }
+.md-typeset .reveal:nth-of-type(n+6) { animation-delay: 0.30s; }
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset .reveal {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Accent colors — usadas em ícones :material-xxx:{ .accent-yyy }
+   ============================================================ */
+.md-typeset .accent-sqlserver { color: #cc2927 !important; }
+.md-typeset .accent-minio     { color: #c72e29 !important; }
+.md-typeset .accent-spark     { color: #e25a1c !important; }
+.md-typeset .accent-delta     { color: #00add4 !important; }
+.md-typeset .accent-iceberg   { color: #1e88e5 !important; }
+.md-typeset .accent-python    { color: #3776ab !important; }
+.md-typeset .accent-docker    { color: #2496ed !important; }
+.md-typeset .accent-jupyter   { color: #f37626 !important; }
+.md-typeset .accent-csv       { color: #4caf50 !important; }
+.md-typeset .accent-bronze    { color: #b87333 !important; }
+
+/* ============================================================
+   Grid cards — leve refinamento sobre o estilo do Material
+   ============================================================ */
+.md-typeset .grid.cards > :is(ul, ol) > li,
+.md-typeset .grid.cards > .card {
+  border-radius: 12px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.md-typeset .grid.cards > :is(ul, ol) > li:hover,
+.md-typeset .grid.cards > .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-color: var(--md-accent-fg-color);
+}
+
+/* ============================================================
+   Mermaid — espaço respirar
+   ============================================================ */
+.md-typeset .mermaid {
+  text-align: center;
+  margin: 1.2em 0;
+}
+
+/* ============================================================
+   Code blocks — cantos um pouco mais arredondados
+   ============================================================ */
+.md-typeset pre > code,
+.md-typeset .highlight pre {
+  border-radius: 8px;
+}
