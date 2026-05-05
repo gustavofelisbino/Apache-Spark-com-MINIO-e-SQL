@@ -1,4 +1,111 @@
 /* ============================================================
+   Header — gradiente, tipografia refinada, hover suave nas tabs
+   ============================================================ */
+.md-header {
+  background: linear-gradient(90deg, #3a3f9e 0%, #5e6ee4 45%, #8a5cf2 100%);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  transition: background 0.4s ease;
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background: linear-gradient(90deg, #1a1d4a 0%, #3a3f9e 45%, #5e3a9e 100%);
+}
+
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.05rem;
+}
+
+.md-header__topic:first-child {
+  font-weight: 700;
+}
+
+/* Logo um pouco maior e com leve glow */
+.md-header__button.md-logo svg,
+.md-header__button.md-logo img {
+  height: 1.6rem;
+  width: 1.6rem;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
+}
+
+/* Search bar — fundo translúcido sobre o header gradient */
+.md-search__form {
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+  border-radius: 8px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.md-search__form:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.md-search__input + .md-search__icon,
+.md-search__input::placeholder {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Tabs — barra abaixo do header com mesmo gradiente atenuado */
+.md-tabs {
+  background: linear-gradient(90deg, #3a3f9e 0%, #5e6ee4 45%, #8a5cf2 100%);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background: linear-gradient(90deg, #1a1d4a 0%, #3a3f9e 45%, #5e3a9e 100%);
+}
+
+.md-tabs__link {
+  font-weight: 500;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.md-tabs__link:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.md-tabs__link--active {
+  font-weight: 700;
+  opacity: 1;
+  position: relative;
+}
+
+.md-tabs__link--active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 3px;
+  background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.4));
+  border-radius: 3px 3px 0 0;
+}
+
+/* Repo source no canto direito */
+.md-header__source {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.1rem 0.4rem;
+  transition: background 0.2s ease;
+}
+
+.md-header__source:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.md-source__icon svg {
+  fill: #ffffff;
+}
+
+.md-source__repository {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
    Hero title — gradiente indigo/violeta usado no topo de cada página
    ============================================================ */
 .md-typeset h1.hero-title,
