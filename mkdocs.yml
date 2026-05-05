@@ -1,6 +1,10 @@
-site_name: "Trabalho 2 — Apache Spark com MinIO e SQL Server"
+site_name: "Spark · MinIO · SQL Server"
 site_description: "Pipeline de dados: SQL Server → landing-zone (CSV) → bronze (Delta Lake)"
 site_author: "Gustavo Felisbino e Lucas Oliverio"
+
+repo_url: https://github.com/gustavofelisbino/Apache-Spark-com-MINIO-e-SQL
+repo_name: gustavofelisbino/Apache-Spark-com-MINIO-e-SQL
+edit_uri: edit/main/docs/
 
 theme:
   name: material
@@ -10,16 +14,17 @@ theme:
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/brightness-7
+        icon: material/weather-night
         name: Modo escuro
     - scheme: slate
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/brightness-4
+        icon: material/weather-sunny
         name: Modo claro
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.top
     - navigation.instant
     - navigation.tracking
@@ -28,8 +33,13 @@ theme:
     - search.highlight
     - search.suggest
     - toc.follow
+    - header.autohide
   icon:
     repo: fontawesome/brands/github
+    logo: material/database-arrow-right
+  font:
+    text: Inter
+    code: JetBrains Mono
 
 extra_css:
   - stylesheets/extra.css
