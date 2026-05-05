@@ -66,8 +66,8 @@ marca ──── modelo ──── carro ───────────�
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/gustavofelisbino/<repo>.git
-cd <repo>
+git clone https://github.com/gustavofelisbino/Apache-Spark-com-MINIO-e-SQL.git
+cd Apache-Spark-com-MINIO-e-SQL
 ```
 
 ### 2. Configure o `.env`
@@ -218,14 +218,27 @@ Abra [http://localhost:8888](http://localhost:8888) no navegador e navegue até 
 
 ## Documentação (MkDocs)
 
+A documentação completa do projeto está publicada via **GitHub Pages**:
+
+**https://gustavofelisbino.github.io/Apache-Spark-com-MINIO-e-SQL/**
+
 ### Executando localmente
 
+Com [uv](https://docs.astral.sh/uv/) instalado (recomendado, não precisa criar venv):
+
 ```bash
-pip install mkdocs mkdocs-material
-mkdocs serve
+uvx --from mkdocs-material mkdocs serve
 ```
 
 Acesse [http://127.0.0.1:8000](http://127.0.0.1:8000) para visualizar.
+
+### Publicando uma nova versão
+
+O deploy é feito para a branch `gh-pages` com um único comando:
+
+```bash
+uvx --from mkdocs-material mkdocs gh-deploy --force
+```
 
 ---
 

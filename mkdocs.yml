@@ -1,6 +1,6 @@
 site_name: "Trabalho 2 — Apache Spark com MinIO e SQL Server"
 site_description: "Pipeline de dados: SQL Server → landing-zone (CSV) → bronze (Delta Lake)"
-site_author: "Gustavo Felisbino"
+site_author: "Gustavo Felisbino e Lucas Oliverio"
 
 theme:
   name: material
@@ -21,15 +21,46 @@ theme:
   features:
     - navigation.tabs
     - navigation.top
+    - navigation.instant
+    - navigation.tracking
     - content.code.copy
+    - content.code.annotate
     - search.highlight
+    - search.suggest
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.highlight:
       anchor_linenums: true
-  - pymdownx.superfences
-  - tables
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
   - Início: index.md
