@@ -2,6 +2,7 @@ services:
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
     container_name: sqlserver
     environment:
       SA_PASSWORD: "Senha@1234"
@@ -28,7 +29,10 @@ services:
       - lakehouse
 
   jupyter:
-    image: jupyter/pyspark-notebook:spark-3.5.0
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    image: trabalho2-jupyter:latest
     container_name: jupyter
     ports:
       - "8888:8888"

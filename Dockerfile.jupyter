@@ -1,0 +1,45 @@
+FROM jupyter/pyspark-notebook:spark-3.5.0
+
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Microsoft ODBC Driver 18 for SQL Server (suporta amd64 e arm64)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl gnupg ca-certificates apt-transport-https && \
+    curl -sSL -o /tmp/packages-microsoft-prod.deb \
+        https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb && \
+    dpkg -i /tmp/packages-microsoft-prod.deb && \
+    rm /tmp/packages-microsoft-prod.deb && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
+        msodbcsql18 \
+        unixodbc-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# JARs necessários para Spark falar com MinIO (S3A) e gravar Delta Lake
+# Versões alinhadas com Spark 3.5.0 (Hadoop client 3.3.4, Scala 2.12)
+ARG SPARK_JARS=/usr/local/spark/jars
+RUN curl -fsSL -o ${SPARK_JARS}/hadoop-aws-3.3.4.jar \
+        https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar && \
+    curl -fsSL -o ${SPARK_JARS}/aws-java-sdk-bundle-1.12.262.jar \
+        https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar && \
+    curl -fsSL -o ${SPARK_JARS}/delta-spark_2.12-3.2.0.jar \
+        https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.2.0/delta-spark_2.12-3.2.0.jar && \
+    curl -fsSL -o ${SPARK_JARS}/delta-storage-3.2.0.jar \
+        https://repo1.maven.org/maven2/io/delta/delta-storage/3.2.0/delta-storage-3.2.0.jar && \
+    chmod 644 ${SPARK_JARS}/hadoop-aws-3.3.4.jar \
+              ${SPARK_JARS}/aws-java-sdk-bundle-1.12.262.jar \
+              ${SPARK_JARS}/delta-spark_2.12-3.2.0.jar \
+              ${SPARK_JARS}/delta-storage-3.2.0.jar
+
+USER ${NB_UID}
+
+# Bibliotecas Python usadas pelos notebooks
+RUN pip install --no-cache-dir \
+    pyodbc==5.1.0 \
+    python-dotenv==1.0.1 \
+    boto3==1.34.131 \
+    delta-spark==3.2.0
